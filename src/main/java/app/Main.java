@@ -17,11 +17,10 @@ public class Main {
 
         // Generate graph structure
         JavaPairRDD<String, Iterable<String>> inputGraph = utils.buildGraph(FILE_PATH);
-        System.out.println(inputGraph.collect());
 
         // Processing
         System.out.println("Calculating PageRank");
-        PageRank.calculatePageRank(0.85);
+        PageRank.calculatePageRank(inputGraph, 0.85);
 
         // Stop Spark
         sparkManager.stopSpark();
