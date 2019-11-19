@@ -5,6 +5,8 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import scala.Tuple2;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class Utils {
@@ -25,9 +27,19 @@ public class Utils {
         Pattern SPACES = Pattern.compile("\\s+");
         JavaRDD<String> rows = readFromFile(filePath);
 
-        return rows.mapToPair(s -> {
+        // Removes the first line
+        String head = rows.first();
+        rows = rows.filter(row -> !row.equals(head));
+
+        // Maps the each line corresponding to each node
+        JavaPairRDD<String, Iterable<String>> graph = rows.mapToPair(s -> {
             String[] parts = SPACES.split(s);
-            return new Tuple2<>(parts[0], parts[1]);
-        }).distinct().groupByKey().cache();
+            // Tuple(String, Iterable<String>
+            return new Tuple2(parts[0], Arrays.asList(Arrays.copyOfRange(parts, 1, parts.length)));
+        });
+
+
+        return graph;
     }
+
 }

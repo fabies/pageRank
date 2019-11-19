@@ -41,6 +41,7 @@ public class Main {
         System.out.println("Calculating PageRank");
         PageRank.calculatePageRank(inputGraph, dampeningFactor);
 
+
         // Stop Spark
         sparkManager.stopSpark();
     }
