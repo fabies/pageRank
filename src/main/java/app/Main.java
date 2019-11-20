@@ -4,15 +4,16 @@ import app.pagerank.PageRank;
 import app.spark.SparkManager;
 import app.utils.Utils;
 import org.apache.spark.api.java.JavaPairRDD;
+import scala.Tuple2;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 
         final String FILE_PATH = "C:/Users/barnu/Desktop/pagerank/src/main/java/app/data/input_data.txt"; // ToDo: cambiar para que acepte path relativo
 
@@ -39,8 +40,21 @@ public class Main {
 
         // Processing
         System.out.println("Calculating PageRank");
-        PageRank.calculatePageRank(inputGraph, dampeningFactor);
+        JavaPairRDD<String, Double> ranksMapping = PageRank.calculatePageRank(inputGraph, dampeningFactor);
 
+
+
+        // Displays and saves the result
+        System.out.println("PageRank Result");
+        List<Tuple2<String, Double>> ranksList = ranksMapping.collect();
+        System.out.println(ranksList);
+
+        PrintWriter writer = new PrintWriter("results.txt", "UTF-8");
+        writer.print("Nodo\tPage Rank\n");
+        for (Tuple2<String, Double> t:ranksList) {
+            writer.println(t._1 + "\t"+t._2);
+        }
+        writer.close();
 
         // Stop Spark
         sparkManager.stopSpark();

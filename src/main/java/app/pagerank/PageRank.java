@@ -11,8 +11,8 @@ import java.util.List;
 public class PageRank {
     private static final double DEFAULT_PR = 0.15; // every page has at least a PR of 0.15 to share out
 
-    public static void calculatePageRank(JavaPairRDD<String, Iterable<String>> sitesGraph, double dampeningFactor) {
-        System.out.println("Sites Graph");
+    public static JavaPairRDD<String, Double> calculatePageRank(JavaPairRDD<String, Iterable<String>> sitesGraph, double dampeningFactor) {
+        System.out.println("Graph Matrix");
         System.out.println(sitesGraph.collect());
 
         // Initialize ranks
@@ -38,7 +38,6 @@ public class PageRank {
             public Double call(Double x, Double y) { return x + y; }
         }).mapValues(sum -> DEFAULT_PR + sum * dampeningFactor);
 
-        System.out.println("PageRank Result");
-        System.out.println(ranksMapping.collect());
+        return ranksMapping;
     }
 }
