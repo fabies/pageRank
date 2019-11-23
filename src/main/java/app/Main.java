@@ -15,8 +15,7 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 
-        final String FILE_PATH = "C:/Users/barnu/Desktop/pagerank/src/main/java/app/data/input_data.txt"; // ToDo: cambiar para que acepte path relativo
-
+        final String FILE_PATH = "/home/fabiola/IdeaProjects/pagerank/src/main/java/app/data/input3.txt"; // ToDo: cambiar para que acepte path relativo
 
         SparkManager sparkManager = SparkManager.getInstance();
         Utils utils = new Utils();
@@ -41,13 +40,11 @@ public class Main {
         // Processing
         System.out.println("Calculating PageRank");
         JavaPairRDD<String, Double> ranksMapping = PageRank.calculatePageRank(inputGraph, dampeningFactor);
-
-
+        System.out.println("PageRank Results completed");
+        // System.out.println(ranksList);
 
         // Displays and saves the result
-        System.out.println("PageRank Result");
         List<Tuple2<String, Double>> ranksList = ranksMapping.collect();
-        System.out.println(ranksList);
 
         PrintWriter writer = new PrintWriter("results.txt", "UTF-8");
         writer.print("Nodo\tPage Rank\n");
@@ -55,6 +52,7 @@ public class Main {
             writer.println(t._1 + "\t"+t._2);
         }
         writer.close();
+        System.out.println("Finished writing to file");
 
         // Stop Spark
         sparkManager.stopSpark();

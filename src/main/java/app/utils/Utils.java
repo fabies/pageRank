@@ -42,14 +42,12 @@ public class Utils {
                 // It catches a behavior of readFromFile(), which doesn't takes the last line if it is a ""
                 results.add(new Tuple2<Integer, Iterable<String>>(i, new ArrayList<>()));
             }
-
         }
 
         // Translates the variable type to the one needed for pagerank
         JavaPairRDD<String, Iterable<String>> graph = sparkManager.getSparkContext().parallelize(results).mapToPair(t -> {
             return new Tuple2(Integer.toString(t._1), t._2);
         });
-
 
         return graph;
     }

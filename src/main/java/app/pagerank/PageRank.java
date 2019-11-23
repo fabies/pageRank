@@ -11,15 +11,22 @@ import java.util.List;
 public class PageRank {
     private static final double DEFAULT_PR = 0.15; // every page has at least a PR of 0.15 to share out
 
+    /**
+     *  Calculates PageRank for a given site network.
+     * @param sitesGraph
+     * @param dampeningFactor
+     * @return Map of site to its respective PageRank value. If a node is not present in the final results means that
+     * the ranking given was zero.
+     */
     public static JavaPairRDD<String, Double> calculatePageRank(JavaPairRDD<String, Iterable<String>> sitesGraph, double dampeningFactor) {
-        System.out.println("Graph Matrix");
-        System.out.println(sitesGraph.collect());
+         // System.out.println("Graph Matrix");
+         // System.out.println(sitesGraph.collect());
 
         // Initialize ranks
         Double initialRankVal =  (double)1/sitesGraph.count();
         JavaPairRDD<String, Double> ranksMapping = sitesGraph.mapValues(rs -> initialRankVal);
-        System.out.println("Inital Ranks Mapping");
-        System.out.println(ranksMapping.collect());
+        // System.out.println("Inital Ranks Mapping");
+        // System.out.println(ranksMapping.collect());
 
         // Calculate new ranks
         JavaPairRDD<String, Tuple2<Iterable<String>, Double>> linkRankAggregationMap = sitesGraph.join(ranksMapping);
